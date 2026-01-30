@@ -5,7 +5,7 @@ import { graph } from '@/lib/data';
 import { findShortestPath as dijkstra } from '@/lib/dijkstra';
 import type { ShortestPathResult } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
-import { calculateFare } from './fare';
+import { calculateFare, calculateDiscountedFare } from './fare';
 
 const FindRouteSchema = z.object({
   startLocation: z.string().min(1, 'Please select a starting location.'),
@@ -48,12 +48,14 @@ export async function findRouteAction(
     }
 
     const totalFare = calculateFare(result.totalDistance);
+    const discountedFare = calculateDiscountedFare(result.totalDistance);
 
     return {
       message: 'Shortest route found successfully.',
       result: {
         ...result,
         totalFare,
+        discountedFare,
       },
     };
   } catch (error) {

@@ -27,3 +27,25 @@ export function calculateFare(distance: number): number {
   // Round up to the next kilometer for additional distance
   return fareMatrix.baseFare + Math.ceil(additionalDistance) * fareMatrix.perKm;
 }
+
+/**
+ * Calculates the discounted fare for students, seniors, and PWDs.
+ * @param distance in kilometers
+ * @returns the calculated discounted fare
+ */
+export function calculateDiscountedFare(distance: number): number {
+  const discountedBaseFare = 11.00; // As per LTFRB guide
+  const discountPercentage = 0.20;
+
+  if (distance <= 0) {
+    return 0;
+  }
+  if (distance <= fareMatrix.baseDistance) {
+    return discountedBaseFare;
+  }
+
+  const regularFare = calculateFare(distance);
+  // The 20% discount is applied to the regular fare for distances beyond the base.
+  const discountedFare = regularFare * (1 - discountPercentage);
+  return discountedFare;
+}

@@ -174,12 +174,26 @@ export default function FindRoutePage() {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Wallet className="h-4 w-4" />
-                            <span>Estimated Fare</span>
+                            <span>Regular Fare</span>
                         </div>
                         <span className="font-bold text-foreground">₱{state.result.totalFare.toFixed(2)}</span>
                     </div>
                     )}
+                    {state.result.discountedFare !== undefined && (
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Wallet className="h-4 w-4" />
+                            <span>Discounted Fare</span>
+                        </div>
+                        <span className="font-bold text-foreground">₱{state.result.discountedFare.toFixed(2)}</span>
+                    </div>
+                    )}
                 </div>
+                {state.result.discountedFare !== undefined && (
+                    <p className="text-xs text-muted-foreground/80 -mt-2 mb-4">
+                        Discount applies to students, seniors, and PWDs.
+                    </p>
+                )}
               <Separator className="mb-4" />
               <div className="space-y-4">
                 {state.result.path.map((segment, index) => (
