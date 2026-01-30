@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { graph } from '@/lib/data';
 import { findShortestPath as dijkstra } from '@/lib/dijkstra';
-import type { ShortestPathResult } from '@/lib/types';
+import type { ShortestPathResult, PathSegment } from '@/lib/types';
 import { revalidatePath } from 'next/cache';
 import { calculateFare, calculateDiscountedFare } from './fare';
 
@@ -47,6 +47,26 @@ export async function findRouteAction(
       return { message: 'No route found between the selected locations.', error: true };
     }
 
+    // Group consecutive path segments that use the same jeepney route
+    const groupedPath: PathSegment[] = [];
+    if (result.path.length > 0) {
+      let currentSegment: PathSegment = { ...result.path[0] };
+
+      for (let i = 1; i < result.path.length; i++) {
+        const nextSegment = result.path[i];
+        if (nextSegment.routeName === currentSegment.routeName && nextSegment.from === currentSegment.to) {
+          // If the next segment continues on the same route, extend the current segment
+          currentSegment.to = nextSegment.to;
+          currentSegment.distance += nextSegment.distance;
+        } else {
+          // If the route changes, it's a transfer. Push the completed segment and start a new one.
+          groupedPath.push(currentSegment);
+          currentSegment = { ...nextSegment };
+        }
+      }
+      groupedPath.push(currentSegment); // Push the last segment of the journey
+    }
+
     const totalFare = calculateFare(result.totalDistance);
     const discountedFare = calculateDiscountedFare(result.totalDistance);
 
@@ -54,6 +74,7 @@ export async function findRouteAction(
       message: 'Shortest route found successfully.',
       result: {
         ...result,
+        path: groupedPath, // Use the new, grouped path
         totalFare,
         discountedFare,
       },
