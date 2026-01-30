@@ -52,55 +52,77 @@
         "email"
       ]
     },
+    "Location": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Location",
+      "type": "object",
+      "description": "Represents a physical location or stop in Iligan City.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique, URL-friendly identifier for the location (e.g., 'gaisano-mall')."
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the location (e.g., 'Gaisano Mall')."
+        },
+        "coordinates": {
+          "type": "object",
+          "description": "The geographical coordinates of the location.",
+          "properties": {
+            "latitude": {
+              "type": "number"
+            },
+            "longitude": {
+              "type": "number"
+            }
+          },
+          "required": ["latitude", "longitude"]
+        }
+      },
+      "required": ["id", "name", "coordinates"]
+    },
     "Route": {
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Route",
       "type": "object",
-      "description": "Represents a route within Iligan City, based on LTFRB data.",
+      "description": "Represents a specific jeepney line.",
       "properties": {
-        "id": {
+        "name": {
           "type": "string",
-          "description": "Unique identifier for the Route entity."
+          "description": "The unique name of the route (e.g., 'iligan-proper-tubod-rosario-heights')."
         },
-        "origin": {
+        "description": {
           "type": "string",
-          "description": "The origin location of the route."
+          "description": "A user-friendly description of the route."
+        }
+      },
+      "required": ["name", "description"]
+    },
+    "RouteSegment": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Route Segment",
+      "type": "object",
+      "description": "Represents a direct connection (an edge) between two locations on a specific route.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "The starting location ID for this segment."
         },
-        "destination": {
+        "target": {
           "type": "string",
-          "description": "The destination location of the route."
-        },
-        "geometry": {
-          "type": "string",
-          "description": "GeoJSON geometry representing the route's path."
+          "description": "The ending location ID for this segment."
         },
         "distance": {
           "type": "number",
-          "description": "The distance of the route in kilometers."
+          "description": "The distance of this segment in kilometers."
         },
-        "fare": {
+        "routeName": {
           "type": "string",
-          "description": "The fare for the route."
-        },
-        "jeepneyType": {
-          "type": "string",
-          "description": "The type of jeepney or vehicle used for this route."
-        },
-        "adminId": {
-          "type": "string",
-          "description": "Reference to Admin. (Relationship: Admin 1:N Route)"
+          "description": "The name of the jeepney route this segment belongs to."
         }
       },
-      "required": [
-        "id",
-        "origin",
-        "destination",
-        "geometry",
-        "distance",
-        "fare",
-        "jeepneyType",
-        "adminId"
-      ]
+      "required": ["source", "target", "distance", "routeName"]
     }
   },
   "auth": {
@@ -144,22 +166,53 @@
         }
       },
       {
-        "path": "/routes/{routeId}",
+        "path": "/locations/{locationId}",
+        "definition": {
+          "entityName": "Location",
+          "schema": {
+            "$ref": "#/backend/entities/Location"
+          },
+          "description": "Stores all addressable locations (stops, landmarks). Publicly readable, admin-writable.",
+          "params": [
+            {
+              "name": "locationId",
+              "description": "The unique identifier of the location."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/routes/{routeName}",
         "definition": {
           "entityName": "Route",
           "schema": {
             "$ref": "#/backend/entities/Route"
           },
-          "description": "Stores route information added by admins. Includes denormalized 'adminId' for authorization independence.",
+          "description": "Stores all official jeepney lines. Publicly readable, admin-writable.",
           "params": [
             {
-              "name": "routeId",
-              "description": "The unique identifier of the route."
+              "name": "routeName",
+              "description": "The unique identifier of the jeepney route."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/route_segments/{segmentId}",
+        "definition": {
+          "entityName": "RouteSegment",
+          "schema": {
+            "$ref": "#/backend/entities/RouteSegment"
+          },
+          "description": "Stores the individual segments that form the transportation graph. Publicly readable, admin-writable.",
+          "params": [
+            {
+              "name": "segmentId",
+              "description": "The unique identifier of the route segment."
             }
           ]
         }
       }
-    ],
-    "reasoning": "The Firestore data structure is designed to manage routes for the Iligan RouteFinder application, ensuring scalability and easy maintenance by administrators. The core structure includes segregated collections for user profiles, administrative roles, and route data. Each route is associated with an admin and contains the origin, destination, geometry, and fare details. This setup avoids hierarchical authorization dependencies by not relying on parent documents for access control, which supports atomic operations and easier debugging.\n\nThe structure supports QAPs by:\n\n1.  Using structural segregation to isolate routes into a dedicated 'routes' collection, simplifying rules for listing and querying routes without filtering based on user roles within the rules themselves.\n2.  Storing roles as explicit documents in '/roles_admin/{uid}', which enables rules to quickly verify admin status using 'exists()' rather than complex data comparisons.\n\nAuthorization Independence is achieved by storing the `adminId` within each route document. This allows security rules to validate that the user attempting to modify a route has the appropriate administrative role, without needing to fetch and verify data from a parent document.\n\nThis data model allows routes to be added, edited, updated and deleted via the admin role and used for calculation of the shortest path by users."
+    ]
   }
 }
