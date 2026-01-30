@@ -1,16 +1,14 @@
-
 export type FareMatrix = {
   baseFare: number; // in PHP
   baseDistance: number; // in km
   perKm: number; // price per additional km
 };
 
-// Default fare matrix.
-// You can tell me to change these values.
+// Based on the LTFRB fare guide effective October 8, 2023.
 export const fareMatrix: FareMatrix = {
-  baseFare: 15,
+  baseFare: 13,
   baseDistance: 4,
-  perKm: 2,
+  perKm: 1.8,
 };
 
 /**
