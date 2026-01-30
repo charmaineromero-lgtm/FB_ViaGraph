@@ -221,5 +221,18 @@ export const graph: Graph = {
       "description": "MA. CRISTINA - ILIGAN PROPER & V.V"
     }
   ],
-  edges: [],
+  edges: [
+    { source: 'g-mall', target: 'msu-iit', weight: 2.5, routeName: 'iligan-proper-tubod-rosario-heights' },
+    { source: 'msu-iit', target: 'g-mall', weight: 2.5, routeName: 'iligan-proper-tubod-rosario-heights' },
+    { source: 'city-hall', target: 'port', weight: 3, routeName: 'iligan-proper-baraas-nfa-v-laville' },
+    { source: 'port', target: 'city-hall', weight: 3, routeName: 'iligan-proper-baraas-nfa-v-laville' },
+    { source: 'msu-iit', target: 'bus-terminal', weight: 4, routeName: 'iligan-proper-hinaplanon-crossing' },
+    { source: 'bus-terminal', target: 'msu-iit', weight: 4, routeName: 'iligan-proper-hinaplanon-crossing' },
+    { source: 'public-market', target: 'g-mall', weight: 1.5, routeName: 'iligan-proper-tambo-gerona' },
+    { source: 'g-mall', target: 'public-market', weight: 1.5, routeName: 'iligan-proper-tambo-gerona' },
+    { source: 'city-hospital', target: 'adventist-hospital', weight: 2, routeName: 'iligan-proper-542-palao-riverside-medic' },
+    { source: 'adventist-hospital', target: 'city-hospital', weight: 2, routeName: 'iligan-proper-542-palao-riverside-medic' },
+    { source: 'msu-iit', target: 'public-market', weight: 1, routeName: 'iligan-proper-bayanihan-vill-sta-elena' },
+    { source: 'public-market', target: 'msu-iit', weight: 1, routeName: 'iligan-proper-bayanihan-vill-sta-elena' }
+  ],
 };
