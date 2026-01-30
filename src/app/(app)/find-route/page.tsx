@@ -1,5 +1,6 @@
 'use client';
 
+import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import React from 'react';
 import {
@@ -61,7 +62,7 @@ function SubmitButton() {
 }
 
 export default function FindRoutePage() {
-  const [state, formAction] = React.useActionState(findRouteAction, { message: '' });
+  const [state, formAction] = useActionState(findRouteAction, { message: '' });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -209,7 +210,7 @@ export default function FindRoutePage() {
                     </div>
                     <div className="flex-1 pt-1">
                       <p className="font-semibold">
-                        Take Jeepney <span className="text-accent">{segment.routeName}</span>
+                        Take Jeepney <span className="text-primary">{segment.routeName}</span>
                       </p>
                       <p className="text-sm text-muted-foreground">
                         From <span className="font-medium text-foreground">{segment.from}</span>
@@ -241,7 +242,10 @@ export default function FindRoutePage() {
       </div>
 
       <div className="lg:col-span-2">
-        <MapPlaceholder />
+        <MapPlaceholder 
+          start={state.result ? state.result.path[0].from : undefined}
+          end={state.result ? state.result.path[state.result.path.length - 1].to : undefined}
+        />
       </div>
     </div>
   );
