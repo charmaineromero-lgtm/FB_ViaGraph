@@ -1,7 +1,7 @@
 'use client';
 
 import { useFormStatus } from 'react-dom';
-import { useActionState } from 'react';
+import React from 'react';
 import {
   Card,
   CardContent,
@@ -61,7 +61,7 @@ function SubmitButton() {
 }
 
 export default function FindRoutePage() {
-  const [state, formAction] = useActionState(findRouteAction, { message: '' });
+  const [state, formAction] = React.useActionState(findRouteAction, { message: '' });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -175,7 +175,7 @@ export default function FindRoutePage() {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Wallet className="h-4 w-4" />
-                            <span>Regular Fare</span>
+                            <span>Total Regular Fare</span>
                         </div>
                         <span className="font-bold text-foreground">₱{state.result.totalFare.toFixed(2)}</span>
                     </div>
@@ -184,7 +184,7 @@ export default function FindRoutePage() {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Wallet className="h-4 w-4" />
-                            <span>Discounted Fare</span>
+                            <span>Total Discounted Fare</span>
                         </div>
                         <span className="font-bold text-foreground">₱{state.result.discountedFare.toFixed(2)}</span>
                     </div>
@@ -217,7 +217,11 @@ export default function FindRoutePage() {
                       <p className="text-sm text-muted-foreground">
                         To <span className="font-medium text-foreground">{segment.to}</span>
                       </p>
-                       <p className="text-xs text-muted-foreground/80 mt-1">({segment.distance.toFixed(2)} km)</p>
+                       <p className="text-xs text-muted-foreground/80 mt-1">
+                        ({segment.distance.toFixed(2)} km)
+                        {segment.regularFare !== undefined &&
+                          ` - Reg: ₱${segment.regularFare.toFixed(2)} / Disc: ₱${segment.discountedFare?.toFixed(2)}`}
+                       </p>
                     </div>
                   </div>
                 ))}

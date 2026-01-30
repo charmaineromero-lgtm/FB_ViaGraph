@@ -26,6 +26,8 @@ export interface PathSegment {
   to: string;
   routeName: string;
   distance: number;
+  regularFare?: number;
+  discountedFare?: number;
 }
 
 export interface ShortestPathResult {

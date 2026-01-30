@@ -67,15 +67,22 @@ export async function findRouteAction(
       groupedPath.push(currentSegment); // Push the last segment of the journey
     }
 
-    // Calculate fare for each ride (segment) and sum them up for transfers
-    const totalFare = groupedPath.reduce((total, segment) => total + calculateFare(segment.distance), 0);
-    const discountedFare = groupedPath.reduce((total, segment) => total + calculateDiscountedFare(segment.distance), 0);
+    // Add fare info to each segment
+    const pathWithFares = groupedPath.map(segment => ({
+      ...segment,
+      regularFare: calculateFare(segment.distance),
+      discountedFare: calculateDiscountedFare(segment.distance),
+    }));
+
+    // Calculate total fare by summing up the fares of each segment
+    const totalFare = pathWithFares.reduce((total, segment) => total + (segment.regularFare || 0), 0);
+    const discountedFare = pathWithFares.reduce((total, segment) => total + (segment.discountedFare || 0), 0);
 
     return {
       message: 'Shortest route found successfully.',
       result: {
         ...result,
-        path: groupedPath, // Use the new, grouped path
+        path: pathWithFares, // Use the new, grouped path with fares
         totalFare,
         discountedFare,
       },
