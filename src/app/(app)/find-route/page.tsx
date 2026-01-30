@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
 import {
   Card,
   CardContent,
@@ -60,7 +61,7 @@ function SubmitButton() {
 }
 
 export default function FindRoutePage() {
-  const [state, formAction] = useFormState(findRouteAction, { message: '' });
+  const [state, formAction] = useActionState(findRouteAction, { message: '' });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
