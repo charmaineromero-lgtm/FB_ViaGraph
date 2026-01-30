@@ -31,4 +31,5 @@ export interface PathSegment {
 export interface ShortestPathResult {
   path: PathSegment[];
   totalDistance: number;
+  totalFare?: number;
 }

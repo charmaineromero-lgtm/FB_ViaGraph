@@ -31,7 +31,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { findRouteAction } from '@/lib/actions';
 import { graph } from '@/lib/data';
 import { MapPlaceholder } from '@/components/map-placeholder';
-import { ArrowRight, Bus, Footprints, Hourglass, Route } from 'lucide-react';
+import { Bus, Footprints, Hourglass, Route, Wallet } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 
@@ -165,9 +165,20 @@ export default function FindRoutePage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="mb-4 flex items-center justify-between text-sm text-muted-foreground">
-                    <span>Total Distance</span>
-                    <span className="font-bold text-foreground">{state.result.totalDistance.toFixed(2)} km</span>
+                <div className="mb-4 space-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center justify-between">
+                        <span>Total Distance</span>
+                        <span className="font-bold text-foreground">{state.result.totalDistance.toFixed(2)} km</span>
+                    </div>
+                    {state.result.totalFare !== undefined && (
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                            <Wallet className="h-4 w-4" />
+                            <span>Estimated Fare</span>
+                        </div>
+                        <span className="font-bold text-foreground">₱{state.result.totalFare.toFixed(2)}</span>
+                    </div>
+                    )}
                 </div>
               <Separator className="mb-4" />
               <div className="space-y-4">
