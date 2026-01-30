@@ -1,51 +1,79 @@
-export type FareMatrix = {
-  baseFare: number; // in PHP
-  baseDistance: number; // in km
-  perKm: number; // price per additional km
-};
+/**
+ * This file contains fare calculation logic based on the LTFRB fare matrix
+ * for Traditional PUJ (Mega Manila), effective October 8, 2023.
+ * The data is derived from the JSON provided by the user.
+ */
 
-// Based on the LTFRB fare guide effective October 8, 2023.
-export const fareMatrix: FareMatrix = {
-  baseFare: 13,
-  baseDistance: 4,
-  perKm: 1.8,
+// Rules derived from the provided LTFRB JSON data.
+const fareRules = {
+  base: {
+    first_km_covered: 4,
+    regular_fare: 13.0,
+  },
+  succeeding_km_addon: {
+    regular_per_km: 1.8,
+  },
+  discount_percentage: 0.20,
+  rounding: {
+    increment: 0.25,
+  },
 };
 
 /**
- * Calculates the fare based on the distance.
+ * Rounds a number to the nearest quarter (0.25).
+ * e.g., roundToNearestQuarter(14.8) => 14.75
+ * e.g., roundToNearestQuarter(18.4) => 18.50
+ * @param value The number to round.
+ * @returns The rounded number.
+ */
+function roundToNearestQuarter(value: number): number {
+  return Math.round(value / fareRules.rounding.increment) * fareRules.rounding.increment;
+}
+
+/**
+ * Calculates the regular fare based on the distance, according to LTFRB rules.
  * @param distance in kilometers
- * @returns the calculated fare
+ * @returns the calculated and rounded regular fare
  */
 export function calculateFare(distance: number): number {
   if (distance <= 0) {
     return 0;
   }
-  if (distance <= fareMatrix.baseDistance) {
-    return fareMatrix.baseFare;
+  
+  if (distance <= fareRules.base.first_km_covered) {
+    // Base fare for the first 4km.
+    return fareRules.base.regular_fare;
   }
-  const additionalDistance = distance - fareMatrix.baseDistance;
-  // Round up to the next kilometer for additional distance
-  return fareMatrix.baseFare + Math.ceil(additionalDistance) * fareMatrix.perKm;
+  
+  const additionalDistance = distance - fareRules.base.first_km_covered;
+  const rawFare = fareRules.base.regular_fare + (additionalDistance * fareRules.succeeding_km_addon.regular_per_km);
+  
+  return roundToNearestQuarter(rawFare);
 }
 
 /**
  * Calculates the discounted fare for students, seniors, and PWDs.
+ * The 20% discount is applied, and the result is rounded to the nearest ₱0.25.
  * @param distance in kilometers
- * @returns the calculated discounted fare
+ * @returns the calculated and rounded discounted fare
  */
 export function calculateDiscountedFare(distance: number): number {
-  const discountedBaseFare = 11.00; // As per LTFRB guide
-  const discountPercentage = 0.20;
-
   if (distance <= 0) {
     return 0;
   }
-  if (distance <= fareMatrix.baseDistance) {
-    return discountedBaseFare;
+
+  // Calculate the raw regular fare *before* rounding
+  let rawRegularFare: number;
+  if (distance <= fareRules.base.first_km_covered) {
+    rawRegularFare = fareRules.base.regular_fare;
+  } else {
+    const additionalDistance = distance - fareRules.base.first_km_covered;
+    rawRegularFare = fareRules.base.regular_fare + (additionalDistance * fareRules.succeeding_km_addon.regular_per_km);
   }
 
-  const regularFare = calculateFare(distance);
-  // The 20% discount is applied to the regular fare for distances beyond the base.
-  const discountedFare = regularFare * (1 - discountPercentage);
-  return discountedFare;
+  // Apply 20% discount to the un-rounded regular fare
+  const rawDiscountedFare = rawRegularFare * (1 - fareRules.discount_percentage);
+
+  // Round the final discounted value to the nearest quarter
+  return roundToNearestQuarter(rawDiscountedFare);
 }
