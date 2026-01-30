@@ -14,48 +14,212 @@ export const graph: Graph = {
     { id: 'city-hospital', name: 'Gregorio T. Lluch Memorial Hospital' },
   ],
   routes: [
-    { name: '01A', description: 'Pala-o to City Proper' },
-    { name: '02B', description: 'Buru-un to City Proper' },
-    { name: '03C', description: 'Suarez to City Proper' },
-    { name: '04D', description: 'Tibanga to Port Area' },
+    {
+      "name": "iligan-proper-542-palao-riverside-medic",
+      "description": "ILIGAN PROPER- 542 PALAO RIVERSIDE-MEDIC"
+    },
+    {
+      "name": "iligan-proper-abegail-subd-country-hills",
+      "description": "ILIGAN PROPER-ABEGAIL SUBD-COUNTRY HILLS"
+    },
+    {
+      "name": "iligan-proper-bacayo-mercy-southbound",
+      "description": "ILIGAN PROPER-BACAYO-MERCY-SOUTHBOUND"
+    },
+    {
+      "name": "iligan-proper-baraas-nfa-v-laville",
+      "description": "ILIGAN PROPER-BARAAS NFA V. LAVILLE"
+    },
+    { "name": "iligan-proper-barinaut", "description": "ILIGAN PROPER-BARINAUT" },
+    {
+      "name": "iligan-proper-bayanihan-vill-sta-elena",
+      "description": "ILIGAN PROPER-BAYANIHAN VILL(STA ELENA)"
+    },
+    {
+      "name": "iligan-proper-bliss-maze-park-tonggo",
+      "description": "ILIGAN PROPER-BLISS-MAZE PARK-TONGGO"
+    },
+    {
+      "name": "iligan-proper-brgy-bagong-silang",
+      "description": "ILIGAN PROPER-BRGY. BAGONG SILANG"
+    },
+    {
+      "name": "iligan-proper-brgy-san-miguel-st-mary",
+      "description": "ILIGAN PROPER-BRGY. SAN MIGUEL-ST MARY"
+    },
+    {
+      "name": "iligan-proper-brgy-santiago",
+      "description": "ILIGAN PROPER-BRGY. SANTIAGO"
+    },
+    { "name": "iligan-proper-buruun", "description": "ILIGAN PROPER-BURUUN" },
+    { "name": "iligan-proper-carbide", "description": "ILIGAN PROPER-CARBIDE" },
+    {
+      "name": "iligan-proper-ceanuri-tomas-cabili",
+      "description": "ILIGAN PROPER-CEANURI-TOMAS CABILI"
+    },
+    {
+      "name": "iligan-proper-city-hall-medical",
+      "description": "ILIGAN PROPER-CITY HALL-MEDICAL"
+    },
+    {
+      "name": "iligan-proper-countryhills-subd-tibanga",
+      "description": "ILIGAN PROPER-COUNTRYHILLS SUBD-TIBANGA"
+    },
+    { "name": "iligan-proper-dalipuga", "description": "ILIGAN PROPER-DALIPUGA" },
+    {
+      "name": "iligan-proper-del-carmen-erlindaville",
+      "description": "ILIGAN PROPER-DEL CARMEN-ERLINDAVILLE"
+    },
+    {
+      "name": "iligan-proper-del-carmen-ibjt",
+      "description": "ILIGAN PROPER-DEL CARMEN-IBJT"
+    },
+    {
+      "name": "iligan-proper-doña-maria-subd",
+      "description": "ILIGAN PROPER-DOÑA MARIA SUBD."
+    },
+    {
+      "name": "iligan-proper-green-heights-via-andrada",
+      "description": "ILIGAN PROPER-GREEN HEIGHTS VIA ANDRADA"
+    },
+    {
+      "name": "iligan-proper-greenfields-ubaldo-laya",
+      "description": "ILIGAN PROPER-GREENFIELDS-UBALDO LAYA"
+    },
+    {
+      "name": "iligan-proper-hinaplanon-crossing",
+      "description": "ILIGAN PROPER-HINAPLANON-CROSSING"
+    },
+    {
+      "name": "iligan-proper-isabel-v-city-hosp-noria",
+      "description": "ILIGAN PROPER-ISABEL V. CITY HOSP./NORIA"
+    },
+    {
+      "name": "iligan-proper-isabel-vill-brgy-ubaldo",
+      "description": "ILIGAN PROPER-ISABEL VILL.-BRGY UBALDO"
+    },
+    {
+      "name": "iligan-proper-jeffrey-rd-erlinda-ville",
+      "description": "ILIGAN PROPER-JEFFREY RD-ERLINDA VILLE"
+    },
+    {
+      "name": "iligan-proper-kalubihon-lacob",
+      "description": "ILIGAN PROPER-KALUBIHON-LACOB"
+    },
+    {
+      "name": "iligan-proper-la-salle-villaverde",
+      "description": "ILIGAN PROPER-LA SALLE-VILLAVERDE"
+    },
+    {
+      "name": "iligan-proper-luinab-bahayan",
+      "description": "ILIGAN PROPER-LUINAB-BAHAYAN"
+    },
+    { "name": "iligan-proper-merila", "description": "ILIGAN PROPER-MERILA" },
+    {
+      "name": "iligan-proper-mimbalut-taytay",
+      "description": "ILIGAN PROPER-MIMBALUT-TAYTAY"
+    },
+    {
+      "name": "iligan-proper-noville-orellana",
+      "description": "ILIGAN PROPER-NOVILLE-ORELLANA"
+    },
+    {
+      "name": "iligan-proper-nsc-highway-tomas-cabili",
+      "description": "ILIGAN PROPER-NSC HIGHWAY-TOMAS CABILI"
+    },
+    {
+      "name": "iligan-proper-san-roque",
+      "description": "ILIGAN PROPER-SAN ROQUE"
+    },
+    {
+      "name": "iligan-proper-sawali-fuentes",
+      "description": "ILIGAN PROPER-SAWALI-FUENTES"
+    },
+    { "name": "iligan-proper-scions", "description": "ILIGAN PROPER-SCIONS" },
+    {
+      "name": "iligan-proper-sta-elena-steeltown",
+      "description": "ILIGAN PROPER-STA. ELENA-STEELTOWN"
+    },
+    {
+      "name": "iligan-proper-sta-felomina-acmac",
+      "description": "ILIGAN PROPER-STA. FELOMINA-ACMAC"
+    },
+    { "name": "iligan-proper-steeltown", "description": "ILIGAN PROPER-STEELTOWN" },
+    {
+      "name": "iligan-proper-sto-rosario-bartolome-orc",
+      "description": "ILIGAN PROPER-STO. ROSARIO-BARTOLOME-ORC"
+    },
+    { "name": "iligan-proper-suarez", "description": "ILIGAN PROPER-SUAREZ" },
+    {
+      "name": "iligan-proper-suarez-iishi",
+      "description": "ILIGAN PROPER-SUAREZ-IISHI"
+    },
+    { "name": "iligan-proper-tambacan", "description": "ILIGAN PROPER-TAMBACAN" },
+    {
+      "name": "iligan-proper-tambo-gerona",
+      "description": "ILIGAN PROPER-TAMBO GERONA"
+    },
+    {
+      "name": "iligan-proper-tambo-bayug",
+      "description": "ILIGAN PROPER-TAMBO-BAYUG"
+    },
+    {
+      "name": "iligan-proper-taytay-mimbalot",
+      "description": "ILIGAN PROPER-TAYTAY-MIMBALOT"
+    },
+    {
+      "name": "iligan-proper-tinago-v-mimbalot",
+      "description": "ILIGAN PROPER-TINAGO V. MIMBALOT"
+    },
+    {
+      "name": "iligan-proper-tipanoy-pindunganan",
+      "description": "ILIGAN PROPER-TIPANOY-PINDUNGANAN"
+    },
+    {
+      "name": "iligan-proper-tominobo-busay-v-scions",
+      "description": "ILIGAN PROPER-TOMINOBO-BUSAY V. SCIONS"
+    },
+    { "name": "iligan-proper-topanoy", "description": "ILIGAN PROPER-TOPANOY" },
+    {
+      "name": "iligan-proper-tubod-rosario-heights",
+      "description": "ILIGAN PROPER-TUBOD-ROSARIO HEIGHTS"
+    },
+    {
+      "name": "iligan-proper-ubaldo-laya-green-fields",
+      "description": "ILIGAN PROPER-UBALDO LAYA-GREEN FIELDS"
+    },
+    {
+      "name": "iligan-proper-upper-hinaplanon-cabaro",
+      "description": "ILIGAN PROPER-UPPER HINAPLANON-CABARO"
+    },
+    {
+      "name": "iligan-proper-upper-hinaplanon-wago",
+      "description": "ILIGAN PROPER-UPPER HINAPLANON-WAGO"
+    },
+    {
+      "name": "iligan-proper-upper-luinab-v-manrique",
+      "description": "ILIGAN PROPER-UPPER LUINAB V. MANRIQUE"
+    },
+    {
+      "name": "iligan-proper-upper-paitan-dalipuga",
+      "description": "ILIGAN PROPER-UPPER PAITAN-DALIPUGA"
+    },
+    {
+      "name": "iligan-proper-upper-tominobo",
+      "description": "ILIGAN PROPER-UPPER TOMINOBO"
+    },
+    {
+      "name": "iligan-proper-villa-celeste",
+      "description": "ILIGAN PROPER-VILLA CELESTE"
+    },
+    {
+      "name": "iligan-proper-villaverde",
+      "description": "ILIGAN PROPER-VILLAVERDE"
+    },
+    {
+      "name": "ma-cristina-iligan-proper-v-v",
+      "description": "MA. CRISTINA - ILIGAN PROPER & V.V"
+    }
   ],
-  edges: [
-    // Route 01A
-    { source: 'bus-terminal', target: 'g-mall', weight: 2.5, routeName: '01A' },
-    { source: 'g-mall', target: 'msu-iit', weight: 1.8, routeName: '01A' },
-    { source: 'msu-iit', target: 'st-michaels', weight: 2.2, routeName: '01A' },
-    { source: 'st-michaels', target: 'public-market', weight: 1.0, routeName: '01A' },
-    
-    // Route 02B
-    { source: 'adventist-hospital', target: 'msu-iit', weight: 3.5, routeName: '02B' },
-    { source: 'msu-iit', target: 'g-mall', weight: 1.8, routeName: '02B' },
-    { source: 'g-mall', target: 'city-hall', weight: 2.0, routeName: '02B' },
-
-    // Route 03C
-    { source: 'city-hospital', target: 'msu-iit', weight: 4.0, routeName: '03C' },
-    { source: 'msu-iit', target: 'public-market', weight: 2.5, routeName: '03C' },
-    { source: 'public-market', target: 'port', weight: 1.5, routeName: '03C' },
-
-    // Route 04D
-    { source: 'overton', target: 'msu-iit', weight: 1.2, routeName: '04D' },
-    { source: 'msu-iit', target: 'port', weight: 3.0, routeName: '04D' },
-    { source: 'port', target: 'st-michaels', weight: 0.8, routeName: '04D' },
-
-    // Add reverse edges for two-way travel
-    { source: 'g-mall', target: 'bus-terminal', weight: 2.5, routeName: '01A' },
-    { source: 'msu-iit', target: 'g-mall', weight: 1.8, routeName: '01A' },
-    { source: 'st-michaels', target: 'msu-iit', weight: 2.2, routeName: '01A' },
-    { source: 'public-market', target: 'st-michaels', weight: 1.0, routeName: '01A' },
-
-    { source: 'msu-iit', target: 'adventist-hospital', weight: 3.5, routeName: '02B' },
-    { source: 'city-hall', target: 'g-mall', weight: 2.0, routeName: '02B' },
-
-    { source: 'msu-iit', target: 'city-hospital', weight: 4.0, routeName: '03C' },
-    { source: 'public-market', target: 'msu-iit', weight: 2.5, routeName: '03C' },
-    { source: 'port', target: 'public-market', weight: 1.5, routeName: '03C' },
-
-    { source: 'msu-iit', target: 'overton', weight: 1.2, routeName: '04D' },
-    { source: 'port', target: 'msu-iit', weight: 3.0, routeName: '04D' },
-    { source: 'st-michaels', target: 'port', weight: 0.8, routeName: '04D' },
-  ],
+  edges: [],
 };
