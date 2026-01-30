@@ -5,7 +5,7 @@ export function Logo() {
     <div className="flex items-center gap-2">
       <Share2 className="h-6 w-6 text-accent" />
       <h1 className="text-xl font-bold tracking-tight text-foreground">
-        Iligan RouteFinder
+        ViaGraph
       </h1>
     </div>
   );

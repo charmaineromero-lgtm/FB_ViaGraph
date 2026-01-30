@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'Iligan RouteFinder',
-  description: 'A navigation tool for Iligan City',
+  title: 'ViaGraph',
+  description: 'Your intelligent route finder',
 };
 
 export default function RootLayout({
