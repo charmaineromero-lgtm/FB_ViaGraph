@@ -12,6 +12,7 @@ export const graph: Graph = {
     { id: 'public-market', name: 'Iligan Public Market' },
     { id: 'adventist-hospital', name: 'Adventist Medical Center' },
     { id: 'city-hospital', name: 'Gregorio T. Lluch Memorial Hospital' },
+    { id: 'palao', name: 'Palao' },
   ],
   routes: [
     {
@@ -164,7 +165,7 @@ export const graph: Graph = {
       "description": "ILIGAN PROPER-TAMBO-BAYUG"
     },
     {
-      "name": "iligan-proper-taytay-mimbalot",
+      "name": "ilgan-proper-taytay-mimbalot",
       "description": "ILIGAN PROPER-TAYTAY-MIMBALOT"
     },
     {
@@ -233,6 +234,8 @@ export const graph: Graph = {
     { source: 'city-hospital', target: 'adventist-hospital', weight: 2, routeName: 'iligan-proper-542-palao-riverside-medic' },
     { source: 'adventist-hospital', target: 'city-hospital', weight: 2, routeName: 'iligan-proper-542-palao-riverside-medic' },
     { source: 'msu-iit', target: 'public-market', weight: 1, routeName: 'iligan-proper-bayanihan-vill-sta-elena' },
-    { source: 'public-market', target: 'msu-iit', weight: 1, routeName: 'iligan-proper-bayanihan-vill-sta-elena' }
+    { source: 'public-market', target: 'msu-iit', weight: 1, routeName: 'iligan-proper-bayanihan-vill-sta-elena' },
+    { source: 'g-mall', target: 'palao', weight: 1.2, routeName: 'iligan-proper-542-palao-riverside-medic' },
+    { source: 'palao', target: 'g-mall', weight: 1.2, routeName: 'iligan-proper-542-palao-riverside-medic' }
   ],
 };
