@@ -1,0 +1,100 @@
+/**
+ * @file firestore.rules
+ * @description Firestore Security Rules for the Iligan RouteFinder application.
+ *
+ * @section Core Philosophy
+ * This ruleset establishes a clear separation between standard users and administrators.
+ * The default security posture is to deny all access, granting permissions explicitly.
+ * Standard users (including anonymous ones) have read-only access to public route data.
+ * Administrators are granted write privileges over route data. User profile data is strictly private to the owner.
+ *
+ * @section Data Structure
+ * The data is organized into three distinct top-level collections to ensure clear separation of concerns and simple, performant rules:
+ * - /users/{userId}: Stores private user profile information.
+ * - /roles_admin/{userId}: A simple collection where the existence of a document grants a user administrative privileges.
+ * - /routes/{routeId}: Contains all route information, which is publicly readable.
+ *
+ * @section Key Security Decisions
+ * - Admin Role Management: A user is considered an admin if a document with their UID exists in the `/roles_admin` collection. This "existence-over-content" pattern is fast and secure. Only other admins can grant or revoke admin status.
+ * - Public Data: The `/routes` collection is publicly readable to allow all users, including anonymous ones, to query and view route information for pathfinding.
+ * - User Privacy: Users can only read and write their own document in the `/users` collection. Listing users is disabled to protect user privacy.
+ *
+ * @section Denormalization for Authorization
+ * To simplify rules and enhance performance, authorization data is denormalized where necessary:
+ * - Admin Roles: Instead of a user document having a complex 'role' field, admin status is denormalized into a separate `/roles_admin` collection. This allows a fast `exists()` check from any other rule in the system.
+ * - Route Ownership: Each document in `/routes` contains an `adminId` field. While any admin can modify any route (a common requirement for shared administrative content), this field serves as an immutable audit trail, enforced on creation to link the route to its creator.
+ *
+ * @section Structural Segregation
+ * This ruleset uses separate top-level collections for different data types (`users`, `routes`, `roles_admin`). This is a highly secure and performant pattern that avoids complex rules with conditional reads. For example, public routes are in their own collection, which is much safer for list operations than a mixed-privacy collection filtered by a field.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for reusable logic
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the requesting user has admin privileges.
+     * Admin status is granted by the existence of a document for the user in the 'roles_admin' collection.
+     */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    /**
+     * @description Rules for user profile documents.
+     * @path /users/{userId}
+     * @allow (create) An authenticated user 'user123' can create their own profile at `/users/user123`.
+     * @deny (list) No user can list the documents in the `/users` collection.
+     * @deny (get) User 'user123' cannot read the profile of 'user456'.
+     * @principle Restricts access to a user's own data tree, enforcing privacy and ownership.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if false;
+    }
+
+    /**
+     * @description Rules for the admin role collection. Existence of a document here grants admin rights.
+     * @path /roles_admin/{userId}
+     * @allow (create) An existing admin can create a document for 'newUser' to make them an admin.
+     * @deny (create) A non-admin user cannot create a document for themselves to gain admin rights.
+     * @deny (delete) A non-admin user cannot delete an admin's role document.
+     * @principle Prevents privilege escalation by ensuring only existing admins can manage admin roles.
+     */
+    match /roles_admin/{userId} {
+      allow get: if isAdmin();
+      allow list: if isAdmin();
+      allow create: if isAdmin() && request.resource.data.id == userId;
+      allow update: if isAdmin() && request.resource.data.id == resource.data.id;
+      allow delete: if isAdmin() && resource != null;
+    }
+
+    /**
+     * @description Rules for transportation routes. Routes are public to all users but writable only by admins.
+     * @path /routes/{routeId}
+     * @allow (get) Any user, including anonymous ones, can read any route document.
+     * @allow (create) An admin user can create a new route document.
+     * @deny (update) A standard authenticated user cannot update a route document.
+     * @deny (delete) A standard authenticated user cannot delete a route.
+     * @principle Enforces a "Public Read, Admin Write" pattern for shared content.
+     */
+    match /routes/{routeId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isAdmin() && request.resource.data.adminId == request.auth.uid && request.resource.data.id == routeId;
+      allow update: if isAdmin() && request.resource.data.id == resource.data.id && request.resource.data.adminId == resource.data.adminId && resource != null;
+      allow delete: if isAdmin() && resource != null;
+    }
+  }
+}

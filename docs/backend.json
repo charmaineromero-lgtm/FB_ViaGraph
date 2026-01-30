@@ -1,0 +1,165 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user of the Iligan RouteFinder application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "username": {
+          "type": "string",
+          "description": "The user's username."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email"
+      ]
+    },
+    "Admin": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Admin",
+      "type": "object",
+      "description": "Represents an administrator of the Iligan RouteFinder application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Admin entity."
+        },
+        "username": {
+          "type": "string",
+          "description": "The admin's username."
+        },
+        "email": {
+          "type": "string",
+          "description": "The admin's email address.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "username",
+        "email"
+      ]
+    },
+    "Route": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Route",
+      "type": "object",
+      "description": "Represents a route within Iligan City, based on LTFRB data.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Route entity."
+        },
+        "origin": {
+          "type": "string",
+          "description": "The origin location of the route."
+        },
+        "destination": {
+          "type": "string",
+          "description": "The destination location of the route."
+        },
+        "geometry": {
+          "type": "string",
+          "description": "GeoJSON geometry representing the route's path."
+        },
+        "distance": {
+          "type": "number",
+          "description": "The distance of the route in kilometers."
+        },
+        "fare": {
+          "type": "string",
+          "description": "The fare for the route."
+        },
+        "jeepneyType": {
+          "type": "string",
+          "description": "The type of jeepney or vehicle used for this route."
+        },
+        "adminId": {
+          "type": "string",
+          "description": "Reference to Admin. (Relationship: Admin 1:N Route)"
+        }
+      },
+      "required": [
+        "id",
+        "origin",
+        "destination",
+        "geometry",
+        "distance",
+        "fare",
+        "jeepneyType",
+        "adminId"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information. Access is restricted to the user's own document.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user, matching the Firebase Auth UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "Admin",
+          "schema": {
+            "$ref": "#/backend/entities/Admin"
+          },
+          "description": "Indicates administrative privileges. Document existence grants admin role to the user ID. Existence over Content. To facilitate simple, robust, and easily debuggable security rules.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the user, matching the Firebase Auth UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/routes/{routeId}",
+        "definition": {
+          "entityName": "Route",
+          "schema": {
+            "$ref": "#/backend/entities/Route"
+          },
+          "description": "Stores route information added by admins. Includes denormalized 'adminId' for authorization independence.",
+          "params": [
+            {
+              "name": "routeId",
+              "description": "The unique identifier of the route."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to manage routes for the Iligan RouteFinder application, ensuring scalability and easy maintenance by administrators. The core structure includes segregated collections for user profiles, administrative roles, and route data. Each route is associated with an admin and contains the origin, destination, geometry, and fare details. This setup avoids hierarchical authorization dependencies by not relying on parent documents for access control, which supports atomic operations and easier debugging.\n\nThe structure supports QAPs by:\n\n1.  Using structural segregation to isolate routes into a dedicated 'routes' collection, simplifying rules for listing and querying routes without filtering based on user roles within the rules themselves.\n2.  Storing roles as explicit documents in '/roles_admin/{uid}', which enables rules to quickly verify admin status using 'exists()' rather than complex data comparisons.\n\nAuthorization Independence is achieved by storing the `adminId` within each route document. This allows security rules to validate that the user attempting to modify a route has the appropriate administrative role, without needing to fetch and verify data from a parent document.\n\nThis data model allows routes to be added, edited, updated and deleted via the admin role and used for calculation of the shortest path by users."
+  }
+}
