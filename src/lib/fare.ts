@@ -1,5 +1,5 @@
 // Rules derived from LTFRB fare matrices, now can be managed via DB
-export type VehicleType = 'jeepney' | 'minibus' | 'walking';
+export type VehicleType = 'jeepney' | 'minibus' | 'bus' | 'walking';
 
 export interface FareRule {
   vehicle_type: string;
@@ -24,21 +24,26 @@ export const defaultFareRules: Record<Exclude<VehicleType, 'walking'>, FareRule>
     succeeding_km_fare: 2.2,
     discount_percentage: 0.20,
   },
+  bus: {
+    vehicle_type: 'bus',
+    base_fare: 15.0,
+    first_km: 4,
+    succeeding_km_fare: 2.2,
+    discount_percentage: 0.20,
+  },
 };
 
-const roundingIncrement = 0.25;
-
 /**
- * Rounds a number to the nearest quarter (0.25).
+ * Rounds a number to the nearest whole peso (nearest integer).
  * @param value The number to round.
  * @returns The rounded number.
  */
-function roundToNearestQuarter(value: number): number {
-  return Math.round(value / roundingIncrement) * roundingIncrement;
+function roundToNearestPeso(value: number): number {
+  return Math.round(value);
 }
 
 /**
- * Calculates the regular fare based on the distance and vehicle type.
+ * Calculates the regular fare based on the vehicle type (always base fare for a single ride segment).
  * @param distance in kilometers
  * @param type vehicle type (jeepney, minibus, walking)
  * @param specificRule optional dynamic rules from DB
@@ -53,21 +58,11 @@ export function calculateFare(distance: number, type: VehicleType = 'jeepney', s
   if (!rules) return 0;
 
   const baseFare = Number(rules.base_fare);
-  const firstKm = Number(rules.first_km);
-  const succeedingKmFare = Number(rules.succeeding_km_fare);
-
-  if (distance <= firstKm) {
-    return baseFare;
-  }
-
-  const additionalDistance = distance - firstKm;
-  const rawFare = baseFare + (additionalDistance * succeedingKmFare);
-
-  return roundToNearestQuarter(rawFare);
+  return roundToNearestPeso(baseFare);
 }
 
 /**
- * Calculates the discounted fare for students, seniors, and PWDs based on distance and vehicle type.
+ * Calculates the discounted fare for students, seniors, and PWDs based on vehicle type (always base fare discount).
  * @param distance in kilometers
  * @param type vehicle type (jeepney, minibus, walking)
  * @param specificRule optional dynamic rules from DB
@@ -82,21 +77,11 @@ export function calculateDiscountedFare(distance: number, type: VehicleType = 'j
   if (!rules) return 0;
 
   const baseFare = Number(rules.base_fare);
-  const firstKm = Number(rules.first_km);
-  const succeedingKmFare = Number(rules.succeeding_km_fare);
   const discountPercentage = Number(rules.discount_percentage);
 
-  let rawRegularFare: number;
-  if (distance <= firstKm) {
-    rawRegularFare = baseFare;
-  } else {
-    const additionalDistance = distance - firstKm;
-    rawRegularFare = baseFare + (additionalDistance * succeedingKmFare);
-  }
+  // Apply discount to the base fare
+  const rawDiscountedFare = baseFare * (1 - discountPercentage);
 
-  // Apply discount to the un-rounded regular fare
-  const rawDiscountedFare = rawRegularFare * (1 - discountPercentage);
-
-  // Round the final discounted value to the nearest quarter
-  return roundToNearestQuarter(rawDiscountedFare);
+  // Round up to the nearest whole peso (e.g. 10.40 becomes 11.00)
+  return Math.ceil(rawDiscountedFare);
 }

@@ -34,8 +34,10 @@ export interface PathSegment {
   to: string;
   routeName: string;
   distance: number;
+  vehicleType?: string;
   regularFare?: number;
   discountedFare?: number;
+  pathCoordinates?: [number, number][] | null;
 }
 
 export interface ShortestPathResult {
@@ -43,4 +45,14 @@ export interface ShortestPathResult {
   totalDistance: number;
   totalFare?: number;
   discountedFare?: number;
+  rideCount?: number;
+  alternatives?: ShortestPathResult[];
+  rawDijkstraPath?: {
+    path: PathSegment[];
+    totalDistance: number;
+    totalFare: number;
+    discountedFare: number;
+    rideCount: number;
+    alternatives?: ShortestPathResult[] | null;
+  } | null;
 }
